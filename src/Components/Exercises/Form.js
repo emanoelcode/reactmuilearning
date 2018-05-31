@@ -9,7 +9,7 @@ import Button from '@material-ui/core/Button';
 
 const styles = theme => ({
   FormControl: {
-    width: 300
+    width: 250
   }
 })
 
@@ -27,10 +27,8 @@ export default withStyles(styles)(class extends Component {
     }
   }
 
-  componentWillReceiveProps({exercise}) {
-    this.setState({
-      ...exercise
-    })
+  static getDerivedStateFromProps({exercise}) {
+    return  exercise || null
   }
 
   //event ({ target: { value } })
