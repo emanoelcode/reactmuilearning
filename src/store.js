@@ -1,8 +1,8 @@
-export const muscles = [
+export const storeMuscles = [
   'shoulders', 'chest', 'arms', 'back', 'legs'
 ]
 
-export const exercises = [
+export const storeExercises = [
   {
     id: 'overhead-press',
     title: 'Overhead Press',
