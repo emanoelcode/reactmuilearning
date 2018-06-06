@@ -20,7 +20,7 @@ const styles = theme => ({
 
 const ExerciseListComponent =
     ({
-         //classes vem pelo uso do withStyles
+         //classes vem pelo uso do withStyles    t
          classes,
          exercises,
          storeMuscles,
