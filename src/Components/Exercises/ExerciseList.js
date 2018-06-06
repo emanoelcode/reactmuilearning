@@ -18,9 +18,62 @@ const styles = theme => ({
     }
 });
 
+const ExerciseVisualization = ({title, description}) =>
+    <Fragment>
+        <Typography
+            variant="display1"
+        >
+            {title}
+        </Typography>
+        <Typography
+            variant="subheading"
+            style={{marginTop: 20}}
+        >
+            {description}
+        </Typography>
+    </Fragment>;
+
+const ExercisesByMuscles = ({exercises, muscleSelected, onSelect, onSelectEdit, onDelete}) => {
+    return exercises.map(([group, exercises]) =>
+        !muscleSelected || muscleSelected === group
+            ? (
+                <Fragment key={group}>
+                    <Typography
+                        variant="headline"
+                        style={{textTransform: 'capitalize'}}
+                    >
+                        {group}
+                    </Typography>
+                    <List component="nav">
+                        {exercises.map(({id, title}) =>
+                            <ListItem
+                                key={id}
+                                button
+                                onClick={() => onSelect(id)}
+                            >
+                                <ListItemText
+                                    primary={title}
+                                />
+                                <ListItemSecondaryAction>
+                                    <IconButton onClick={() => onSelectEdit(id)}>
+                                        <Edit/>
+                                    </IconButton>
+                                    <IconButton onClick={() => onDelete(id)}>
+                                        <Delete/>
+                                    </IconButton>
+                                </ListItemSecondaryAction>
+                            </ListItem>
+                        )}
+                    </List>
+                </Fragment>
+            )
+            : (null)
+    );
+};
+
 const ExerciseListComponent =
     ({
-         //classes vem pelo uso do withStyles    t
+         //classes vem pelo uso do withStyles
          classes,
          exercises,
          storeMuscles,
@@ -40,64 +93,31 @@ const ExerciseListComponent =
         <Grid container>
             <Grid item xs={12} sm={6}>
                 <Paper className={classes.Paper}>
-                    {exercises.map(([group, exercises]) =>
-                        !muscleSelected || muscleSelected === group
-                            ? (
-                                <Fragment key={group}>
-                                    <Typography
-                                        variant="headline"
-                                        style={{textTransform: 'capitalize'}}
-                                    >
-                                        {group}
-                                    </Typography>
-                                    <List component="nav">
-                                        {exercises.map(({id, title}) =>
-                                            <ListItem
-                                                key={id}
-                                                button
-                                                onClick={() => onSelect(id)}
-                                            >
-                                                <ListItemText
-                                                    primary={title}
-                                                />
-                                                <ListItemSecondaryAction>
-                                                    <IconButton onClick={() => onSelectEdit(id)}>
-                                                        <Edit/>
-                                                    </IconButton>
-                                                    <IconButton onClick={() => onDelete(id)}>
-                                                        <Delete/>
-                                                    </IconButton>
-                                                </ListItemSecondaryAction>
-                                            </ListItem>
-                                        )}
-                                    </List>
-                                </Fragment>
-                            )
-                            : (null)
-                    )}
+                    <ExercisesByMuscles
+                        exercises={exercises}
+                        muscleSelected={muscleSelected}
+                        onSelect={onSelect}
+                        onSelectEdit={onSelectEdit}
+                        onDelete={onDelete}
+                    />
                 </Paper>
             </Grid>
             <Grid item xs={12} sm={6}>
                 <Paper className={classes.Paper}>
                     {editMode
-                        ? <ExerciseForm
-                            exercise={exercise}
-                            muscles={storeMuscles}
-                            onSubmit={onEdit}
-                        />
-                        : <Fragment>
-                            <Typography
-                                variant="display1"
-                            >
-                                {title}
-                            </Typography>
-                            <Typography
-                                variant="subheading"
-                                style={{marginTop: 20}}
-                            >
-                                {description}
-                            </Typography>
-                        </Fragment>
+                        ? (
+                            <ExerciseForm
+                                exercise={exercise}
+                                muscles={storeMuscles}
+                                onSubmit={onEdit}
+                            />
+                        )
+                        : (
+                            <ExerciseVisualization
+                                title={title}
+                                description={description}
+                            />
+                        )
                     }
                 </Paper>
             </Grid>
