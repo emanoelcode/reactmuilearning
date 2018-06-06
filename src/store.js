@@ -1,6 +1,6 @@
 export const storeMuscles = [
   'shoulders', 'chest', 'arms', 'back', 'legs'
-]
+];
 
 export const storeExercises = [
   {
@@ -45,4 +45,4 @@ export const storeExercises = [
     description: 'Legs exercise...',
     muscles: 'legs'
   },
-]
+];

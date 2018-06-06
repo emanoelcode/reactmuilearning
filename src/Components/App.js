@@ -17,9 +17,9 @@ export default class extends Component {
 
     getExercisesByMuscles() {
         //define o valor inicial para mesmo se excluir todos os exercícios os grupos continuam
-        const initExercises = storeMuscles.reduce((exercises, category) => ({
+        const initExercises = storeMuscles.reduce((exercises, muscleSelected) => ({
             ...exercises,
-            [category]: []
+            [muscleSelected]: []
         }), {});
 
         return Object.entries(
@@ -36,9 +36,9 @@ export default class extends Component {
         )
     }
 
-    handleCategorySelect = category => {
+    handleMuscleSelect = muscleSelected => {
         this.setState({
-            category
+            muscleSelected
         })
     };
 
@@ -80,7 +80,7 @@ export default class extends Component {
 
     render() {
         const exercises = this.getExercisesByMuscles();
-        const {category, exercise, editMode} = this.state;
+        const {muscleSelected, exercise, editMode} = this.state;
 
         return (
             <Fragment>
@@ -96,10 +96,10 @@ export default class extends Component {
 
                 <ExerciseList
                     exercise={exercise}
-                    category={category}
+                    muscleSelected={muscleSelected}
                     editMode={editMode}
                     exercises={exercises}
-                    muscles={storeMuscles}
+                    storeMuscles={storeMuscles}
                     onSelect={this.handleExerciseSelect}
                     onDelete={this.handleExerciseDelete}
                     onSelectEdit={this.handleExerciseSelectEdit}
@@ -107,9 +107,9 @@ export default class extends Component {
                 />
 
                 <Footer
-                    category={category}
-                    muscles={storeMuscles}
-                    onSelect={this.handleCategorySelect}
+                    muscleSelected={muscleSelected}
+                    storeMuscles={storeMuscles}
+                    onSelect={this.handleMuscleSelect}
                 />
             </Fragment>
         );

@@ -1,17 +1,17 @@
 import React from 'react'
 import {Paper, Tabs, Tab, withWidth} from '@material-ui/core'
 
-export default withWidth()(
-    ({muscles, category, onSelect, width}) => {
+//withWidth adiciona no props a informação da largura da tela que está sendo utilizada para visualizar o app
+export default withWidth()(({storeMuscles, muscleSelected, onSelect, width}) => {
 
-        const index = category
-            ? muscles.findIndex(group => group === category) + 1
-            : 0;
+    //Obtem o indese do muscle selecionado
+    const index = (muscleSelected ? storeMuscles.findIndex(group => group === muscleSelected) + 1 : 0);
 
-        const onIndexSelect = (e, index) =>
-            onSelect(index === 0 ? '' : muscles[index - 1]);
+    const onIndexSelect = (e, index) =>
+        onSelect(index === 0 ? '' : storeMuscles[index - 1]);
 
-        return <Paper>
+    return (
+        <Paper>
             <Tabs
                 value={index}
                 onChange={onIndexSelect}
@@ -21,9 +21,10 @@ export default withWidth()(
                 scrollable={width === 'xs'}
             >
                 <Tab label="ALL"/>
-                {muscles.map(group =>
-                    <Tab key={group} label={group}/>
+                {storeMuscles.map(muscle =>
+                    <Tab key={muscle} label={muscle}/>
                 )}
             </Tabs>
         </Paper>
-    })
+    );
+})
