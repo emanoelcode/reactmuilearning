@@ -7,7 +7,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import {withStyles} from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 
-const styles = theme => ({
+const styles = () => ({
     FormControl: {
         width: 250
     }

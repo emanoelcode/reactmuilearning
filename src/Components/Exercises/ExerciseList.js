@@ -9,7 +9,7 @@ import {Delete, Edit} from '@material-ui/icons'
 import ExerciseForm from './ExerciseForm'
 import {withStyles} from '@material-ui/core';
 
-const styles = theme => ({
+const styles = () => ({
     Paper: {
         padding: 20,
         marginTop: 5,
