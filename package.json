@@ -1,14 +1,16 @@
 {
-  "name": "new",
+  "name": "Estudo",
   "version": "1.0.0",
-  "description": "",
+  "description": "Projeto de estudo de React, Material UI e React Router",
   "keywords": [],
   "main": "src/index.js",
   "dependencies": {
     "@material-ui/core": "1.0.0",
     "@material-ui/icons": "1.0.0",
+    "json-server": "^0.13.0",
     "react": "16.3.2",
     "react-dom": "16.3.2",
+    "react-router-dom": "^4.3.1",
     "react-scripts": "1.1.4"
   },
   "devDependencies": {},

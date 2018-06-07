@@ -16,22 +16,20 @@ export default class extends Component {
     }
 
     getExercisesByMuscles() {
+
         //define o valor inicial para mesmo se excluir todos os exercícios os grupos continuam
-        const initExercises = storeMuscles.reduce((exercises, muscleSelected) => ({
-            ...exercises,
-            [muscleSelected]: []
-        }), {});
+        const initExercises = storeMuscles.reduce((newEmptyListExerciseByMuscle, muscle) => {
+            return ({
+                ...newEmptyListExerciseByMuscle,
+                [muscle]: []
+            })}, {}
+        );
 
         return Object.entries(
-            this.state.exercises.reduce((exercises, exercise) => {
-                const {muscles} = exercise;
-                exercises[muscles] = [...exercises[muscles], exercise]
-                // Antes de ter o valor inicial precisa ser como abaixo
-                // exercises[muscles] = exercises[muscles]
-                //   ? [...exercises[muscles], exercise]
-                //   : [exercise]
-
-                return exercises
+            this.state.exercises.reduce((newListExerciseByMuscle, ex) => {
+                const {muscles} = ex;
+                newListExerciseByMuscle[muscles] = [...newListExerciseByMuscle[muscles], ex];
+                return newListExerciseByMuscle;
             }, initExercises)
         )
     }
@@ -48,13 +46,13 @@ export default class extends Component {
     }));
 
     //setState recebe (prevState, props). Abaixo props não é utilizado e do prevState só nos interessa os exercicios
-    handleExerciseCreate = exercise => this.setState(({exercises}) => ({
+    handleExerciseCreate = newExercise => this.setState(({exercises}) => ({
         //Atualiza o estado com a nova lista de exercícios
         exercises: [
             //utiliza spread operator "..." para adicionar ao array os exercicios que já estão na base, e com isto mantendo no componente
             ...exercises,
             //Novo exercício
-            exercise
+            newExercise
         ]
     }));
 

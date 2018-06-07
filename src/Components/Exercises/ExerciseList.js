@@ -34,6 +34,7 @@ const ExerciseVisualization = ({title, description}) =>
     </Fragment>;
 
 const ExercisesByMuscles = ({exercises, muscleSelected, onSelect, onSelectEdit, onDelete}) => {
+    //[group, exercises] é a desestruturação de cada elemento iterado em exercises, onde cada elemento é um array, formado por group e exercises
     return exercises.map(([group, exercises]) =>
         !muscleSelected || muscleSelected === group
             ? (
