@@ -1,115 +1,58 @@
-import React, {Component, Fragment} from 'react'
-import CssBaseline from '@material-ui/core/CssBaseline';
-import {Header, Footer} from './Layouts';
-import { ExerciseList } from './Exercises/ExerciseList'
-import {storeMuscles, storeExercises} from '../store.js'
+import React, {Component, Fragment} from 'react';
+import {BrowserRouter, Link, Route, Switch} from 'react-router-dom';
+import WriterList from "./Writers/WriterList";
+import { NotFound } from './Erros';
 
 export default class extends Component {
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            exercises: storeExercises,
-            exercise: {},
-            editMode: false
-        };
-    }
-
-    getExercisesByMuscles() {
-
-        //define o valor inicial para mesmo se excluir todos os exercícios os grupos continuam
-        const initExercises = storeMuscles.reduce((newEmptyListExerciseByMuscle, muscle) => {
-            return ({
-                ...newEmptyListExerciseByMuscle,
-                [muscle]: []
-            })}, {}
-        );
-
-        return Object.entries(
-            this.state.exercises.reduce((newListExerciseByMuscle, ex) => {
-                const {muscles} = ex;
-                newListExerciseByMuscle[muscles] = [...newListExerciseByMuscle[muscles], ex];
-                return newListExerciseByMuscle;
-            }, initExercises)
-        )
-    }
-
-    handleMuscleSelect = muscleSelected => {
-        this.setState({
-            muscleSelected
-        })
+    state = {
+        writers: []
     };
 
-    handleExerciseSelect = id => this.setState((prevState) => ({
-        exercise: prevState.exercises.find(ex => ex.id === id),
-        editMode: false
-    }));
 
-    //setState recebe (prevState, props). Abaixo props não é utilizado e do prevState só nos interessa os exercicios
-    handleExerciseCreate = newExercise => this.setState(({exercises}) => ({
-        //Atualiza o estado com a nova lista de exercícios
-        exercises: [
-            //utiliza spread operator "..." para adicionar ao array os exercicios que já estão na base, e com isto mantendo no componente
-            ...exercises,
-            //Novo exercício
-            newExercise
-        ]
-    }));
+    async componentDidMount() {
+        //A parte ?_embed=texts da URL do json server faz com que o servidor retorne
+        //o json de writers com o texts embutido/aninhado
+        const writers = await (await fetch('http://localhost:3004/writers?_embed=texts')).json();
+        this.setState({writers});
+    }
 
-    handleExerciseDelete = id => this.setState(({exercises, exercise, editMode}) => ({
-        exercises: exercises.filter(ex => ex.id !== id),
-        editMode: (exercise.id === id ? false : editMode),
-        exercise: (exercise.id === id ? {} : exercise)
-    }));
-
-    handleExerciseSelectEdit = id => this.setState(({exercises}) => ({
-        exercise: exercises.find(ex => ex.id === id),
-        editMode: true
-    }));
-
-    handleExerciseEdit = exercise => this.setState(({exercises}) => ({
-        exercises: [
-            ...exercises.filter(ex => ex.id !== exercise.id),
-            exercise
-        ],
-        exercise
-    }));
-
+    // componentDidMount() {
+    //     fetch('http://localhost:3004/writers')
+    //         .then(res => res.json())
+    //         .then(writers => this.setState({writers}));
+    // }
 
     render() {
-        const exercises = this.getExercisesByMuscles();
-        const {muscleSelected, exercise, editMode} = this.state;
-
         return (
-            <Fragment>
-                {/*Componente Fragment acima evita o uso de vários divs, servido para agrupar o retorno abaixo*/}
+            <BrowserRouter>
+                <Fragment>
+                    <ul>
+                        <li>
+                            <Link to={"/"}>
+                                Home
+                            </Link>
+                        </li>
+                        <li>
+                            <Link to={"/writers"}>
+                                Writers
+                            </Link>
+                        </li>
+                    </ul>
 
-                {/*CssBaseline Normaliza o CSS */}
-                <CssBaseline/>
+                    {/*Switch faz com que seja roteado apenas para a primeira opção de rota correspondente encontrada*/}
+                    <Switch>
+                        <Route exact path="/" render={() => <div>Home</div>}/>
 
-                <Header
-                    muscles={storeMuscles}
-                    onExerciseCreate={this.handleExerciseCreate}
-                />
+                        <Route path="/writers" render={
+                            props => <WriterList {...props} writers={this.state.writers}/>
+                        }/>
 
-                <ExerciseList
-                    exercise={exercise}
-                    muscleSelected={muscleSelected}
-                    editMode={editMode}
-                    exercises={exercises}
-                    storeMuscles={storeMuscles}
-                    onSelect={this.handleExerciseSelect}
-                    onDelete={this.handleExerciseDelete}
-                    onSelectEdit={this.handleExerciseSelectEdit}
-                    onEdit={this.handleExerciseEdit}
-                />
-
-                <Footer
-                    muscleSelected={muscleSelected}
-                    storeMuscles={storeMuscles}
-                    onSelect={this.handleMuscleSelect}
-                />
-            </Fragment>
+                        <Route component={NotFound} />
+                    </Switch>
+                </Fragment>
+            </BrowserRouter>
         );
     }
+
 }
